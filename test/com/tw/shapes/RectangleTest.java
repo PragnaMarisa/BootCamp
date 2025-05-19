@@ -15,4 +15,14 @@ public class RectangleTest {
         Rectangle rectangle = new Rectangle(5, 2);
         assertEquals(10, rectangle.area());
     }
+    @Test
+    void perimeterOfRect() {
+        Rectangle rectangle = new Rectangle(2, 2);
+        assertEquals(8, rectangle.perimeter());
+    }
+    @Test
+    void perimeterOfRect2() {
+        Rectangle rectangle = new Rectangle(5, 2);
+        assertEquals(14, rectangle.perimeter());
+    }
 }
