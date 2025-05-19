@@ -1,5 +1,6 @@
 package com.tw.probability;
 
+import com.tw.Exceptions.IllegalValue;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -60,11 +61,26 @@ public class ProbabilityTest {
 
     @Test
     void validatingProbabilityOnWrongValue() {
-        assertThrows(RuntimeException.class, () -> Probability.create(4));
+        assertThrows(IllegalValue.class, () -> Probability.create(4));
     }
 
     @Test
     void validatingProbabilityOnValidValue() {
         assertDoesNotThrow(() -> Probability.create(0.99));
+    }
+
+    @Test
+    void atLeastOneTailWhenTwoCoins() {
+        Probability p1 = Probability.create(0.5);
+        Probability p2 = Probability.create(0.5);
+        Probability expected = Probability.create(0.75);
+        assertEquals(expected, p1.or(p2));
+    }
+    @Test
+    void failingAtLeastOneTailWhenTwoCoins() {
+        Probability p1 = Probability.create(0.5);
+        Probability p2 = Probability.create(0.5);
+        Probability expected = Probability.create(0.5);
+        assertNotEquals(expected, p1.or(p2));
     }
 }
