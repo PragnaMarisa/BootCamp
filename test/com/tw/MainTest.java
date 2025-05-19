@@ -9,4 +9,5 @@ class MainTest {
     void onePlusOneIsTwo() {
         assertEquals(3, 1 + 2);
     }
+
 }
