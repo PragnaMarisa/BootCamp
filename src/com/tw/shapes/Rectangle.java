@@ -1,6 +1,6 @@
 package com.tw.shapes;
 
-public class Rectangle {
+public class Rectangle implements Shape{
     private final int width;
     private final int height;
 
@@ -9,10 +9,12 @@ public class Rectangle {
         this.height = height;
     }
 
+    @Override
     public int area() {
         return width * height;
     }
 
+    @Override
     public int perimeter() {
         return 2 * (width + height);
     }
