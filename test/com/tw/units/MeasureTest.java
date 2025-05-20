@@ -78,11 +78,11 @@ public class MeasureTest {
     }
 
     @Test
-    void addingTwoInches() throws Exception {
+    void addingTwoInches() {
         Measure measure1 = Measure.initInch(2);
         Measure measure2 = Measure.initInch(2);
         Measure result = Measure.initInch(4);
-        assert (measure1.addInch(measure2).equals(result));
+        assert (measure1.addLengths(measure2).equals(result));
     }
 
     @Test
@@ -90,21 +90,22 @@ public class MeasureTest {
         Measure measure1 = Measure.initInch(2);
         Measure measure2 = Measure.initInch(5);
         Measure result = Measure.initInch(7);
-        assert (measure1.addInch(measure2).equals(result));
+        assert (measure1.addLengths(measure2).equals(result));
     }
 
     @Test
-    void addingTwoInchesWithWrongResult() throws Exception {
+    void addingTwoInchesWithWrongResult() {
         Measure measure1 = Measure.initInch(2);
         Measure measure2 = Measure.initInch(2);
         Measure result = Measure.initInch(6);
-        assertFalse(measure1.addInch(measure2).equals(result));
+        assertFalse(measure1.addLengths(measure2).equals(result));
     }
 
     @Test
-    void addingTwoInchesWithWrongMeasureUnit() {
+    void addTwoLengths() {
         Measure measure1 = Measure.initInch(2);
-        Measure measure2 = Measure.initLitre(2);
-        assertThrows( Exception.class, () -> measure1.addInch(measure2));
+        Measure measure2 = Measure.initCentimeter(2.5);
+        Measure result = Measure.initInch(3);
+        assert(measure1.addLengths(measure2).equals(result));
     }
 }

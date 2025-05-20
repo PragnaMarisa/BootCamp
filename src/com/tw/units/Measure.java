@@ -4,76 +4,86 @@ import com.tw.Exceptions.IllegalValue;
 
 import java.util.Objects;
 
-public class Measure {
+public class Measure<U extends Unit> {
 
-    private final double val;
     private final double original;
-    private final Unit originalUnit;
-    public static final int CONVERSION_FACTOR_CM = 10;
-    public static final int CONVERSION_FACTOR_MM = 1;
-    public static final double CONVERSION_FACTOR_GALLON = 3.78 * 1000000;
-    public static final int CONVERSION_FACTOR_LITRE = 1000000;
-    private static final int CONVERSION_FACTOR_FOOT = 12 * 25;
-    private static final int CONVERSION_FACTOR_INCH = 25;
+    private final U originalUnit;
 
-    public Measure(double val, double original, Unit originalUnit) {
-        this.val = val;
+    private Measure(double original, U originalUnit) {
         this.original = original;
         this.originalUnit = originalUnit;
     }
 
-    private static Measure create(double unitVal, double conversionFactor, Unit originalUnit) {
-        if (unitVal < 0) throw new IllegalValue("Not a valid measurement");
-        return new Measure(unitVal * conversionFactor, unitVal, originalUnit);
+    private double toMM() {
+        return this.originalUnit.toStandard(this.original);
+    }
+
+    private static Measure create(double originalValue, Unit originalUnit) {
+        if (originalValue < 0) throw new IllegalValue("Not a valid measurement");
+        return new Measure(originalValue, originalUnit);
     }
 
     public static Measure initFoot(double foot) {
-        return Measure.create(foot, CONVERSION_FACTOR_FOOT, Unit.FOOT);
+        return Measure.create(foot, Length.FOOT);
     }
 
     public static Measure initInch(double inch) {
-        return Measure.create(inch, CONVERSION_FACTOR_INCH, Unit.INCH);
+        return Measure.create(inch, Length.INCH);
     }
 
     public static Measure initCentimeter(double centimeter) {
-        return Measure.create(centimeter, CONVERSION_FACTOR_CM, Unit.CM);
+        return Measure.create(centimeter, Length.CM);
     }
 
     public static Measure initMillimeter(double millimeter) {
-        return Measure.create(millimeter, CONVERSION_FACTOR_MM, Unit.MM);
+        return Measure.create(millimeter, Length.MM);
     }
 
     public static Measure initGallon(double gallons) {
-        return Measure.create(gallons, CONVERSION_FACTOR_GALLON, Unit.GALLON);
+        return Measure.create(gallons, Volume.GALLON);
     }
 
     public static Measure initLitre(double litre) {
-        return Measure.create(litre, CONVERSION_FACTOR_LITRE, Unit.LITRE);
+        return Measure.create(litre, Volume.LITRE);
     }
 
     public boolean areEqual(Measure other) {
-        return this.val == other.val;
+        return this.toMM() == other.toMM();
     }
 
-    public Measure addInch(Measure measure2) throws Exception {
-        validateUnits(measure2);
-        return Measure.initInch(this.original + measure2.original);
+    private double MMtoInch(double mm) {
+        return mm / 25;
     }
 
-    private boolean validateUnits(Measure measure2) throws Exception {
-        if (this.originalUnit != measure2.originalUnit)throw new Exception("hi");
-        return true;
+    private double getSum(Measure measure2) {
+        double sum = this.toMM() + measure2.toMM();
+        return sum;
+    }
+
+    public Measure addLengths(Measure measure2) {
+        double sum = getSum(measure2);
+        double inchVal = MMtoInch(sum);
+        return Measure.initInch(inchVal);
+    }
+    public Measure addVolumes(Measure measure2) {
+        double sum = getSum(measure2);
+        double litreVal = MMtoLitres(sum);
+        return Measure.initLitre(litreVal);
+    }
+
+    private double MMtoLitres(double total) {
+        return total / 10;
     }
 
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Measure)) return false;
         Measure measure = (Measure) o;
-        return Double.compare(val, measure.val) == 0 && Double.compare(original, measure.original) == 0 && originalUnit == measure.originalUnit;
+        return Double.compare(original, measure.original) == 0 && originalUnit == measure.originalUnit;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(val, original, originalUnit);
+        return Objects.hash(original, originalUnit);
     }
 }
