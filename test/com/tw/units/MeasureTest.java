@@ -46,7 +46,7 @@ public class MeasureTest {
     void inchesToCMCompareGivenInvalidMeasures() {
         Measure inch = Measure.initInch(2);
         Measure centi = Measure.initCentimeter(7);
-        assertFalse (inch.areEqual(centi));
+        assertFalse(inch.areEqual(centi));
     }
 
     @Test
@@ -60,20 +60,51 @@ public class MeasureTest {
     void CMToMMCompareGivenInvalidMeasures() {
         Measure centi = Measure.initCentimeter(7);
         Measure milli = Measure.initMillimeter(10);
-        assertFalse (centi.areEqual(milli));
+        assertFalse(centi.areEqual(milli));
     }
 
     @Test
     void gallonToLtCompare() {
         Measure gallon = Measure.initGallon(1);
-        Measure litre= Measure.initLitre(3.78);
+        Measure litre = Measure.initLitre(3.78);
         assert (gallon.areEqual(litre));
     }
 
     @Test
     void gallonToLtCompareGivenInvalidMeasures() {
         Measure gallon = Measure.initGallon(1);
-        Measure litre= Measure.initLitre(10);
+        Measure litre = Measure.initLitre(10);
         assertFalse(gallon.areEqual(litre));
+    }
+
+    @Test
+    void addingTwoInches() throws Exception {
+        Measure measure1 = Measure.initInch(2);
+        Measure measure2 = Measure.initInch(2);
+        Measure result = Measure.initInch(4);
+        assert (measure1.addInch(measure2).equals(result));
+    }
+
+    @Test
+    void addingTwoInches2() throws Exception {
+        Measure measure1 = Measure.initInch(2);
+        Measure measure2 = Measure.initInch(5);
+        Measure result = Measure.initInch(7);
+        assert (measure1.addInch(measure2).equals(result));
+    }
+
+    @Test
+    void addingTwoInchesWithWrongResult() throws Exception {
+        Measure measure1 = Measure.initInch(2);
+        Measure measure2 = Measure.initInch(2);
+        Measure result = Measure.initInch(6);
+        assertFalse(measure1.addInch(measure2).equals(result));
+    }
+
+    @Test
+    void addingTwoInchesWithWrongMeasureUnit() {
+        Measure measure1 = Measure.initInch(2);
+        Measure measure2 = Measure.initLitre(2);
+        assertThrows( Exception.class, () -> measure1.addInch(measure2));
     }
 }

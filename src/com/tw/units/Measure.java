@@ -9,6 +9,12 @@ public class Measure {
     private final double val;
     private final double original;
     private final Unit originalUnit;
+    public static final int CONVERSION_FACTOR_CM = 10;
+    public static final int CONVERSION_FACTOR_MM = 1;
+    public static final double CONVERSION_FACTOR_GALLON = 3.78 * 1000000;
+    public static final int CONVERSION_FACTOR_LITRE = 1000000;
+    private static final int CONVERSION_FACTOR_FOOT = 12 * 25;
+    private static final int CONVERSION_FACTOR_INCH = 25;
 
     public Measure(double val, double original, Unit originalUnit) {
         this.val = val;
@@ -22,31 +28,41 @@ public class Measure {
     }
 
     public static Measure initFoot(double foot) {
-        return Measure.create(foot, 12 * 25, Unit.FOOT);
+        return Measure.create(foot, CONVERSION_FACTOR_FOOT, Unit.FOOT);
     }
 
     public static Measure initInch(double inch) {
-        return Measure.create(inch, 25, Unit.INCH);
+        return Measure.create(inch, CONVERSION_FACTOR_INCH, Unit.INCH);
     }
 
     public static Measure initCentimeter(double centimeter) {
-        return Measure.create(centimeter, 10, Unit.CM);
+        return Measure.create(centimeter, CONVERSION_FACTOR_CM, Unit.CM);
     }
 
     public static Measure initMillimeter(double millimeter) {
-        return Measure.create(millimeter, 1, Unit.MM);
+        return Measure.create(millimeter, CONVERSION_FACTOR_MM, Unit.MM);
     }
 
     public static Measure initGallon(double gallons) {
-        return Measure.create(gallons, 3.78 * 1000000, Unit.GALLON);
+        return Measure.create(gallons, CONVERSION_FACTOR_GALLON, Unit.GALLON);
     }
 
     public static Measure initLitre(double litre) {
-        return Measure.create(litre, 1000000, Unit.LITRE);
+        return Measure.create(litre, CONVERSION_FACTOR_LITRE, Unit.LITRE);
     }
 
     public boolean areEqual(Measure other) {
         return this.val == other.val;
+    }
+
+    public Measure addInch(Measure measure2) throws Exception {
+        validateUnits(measure2);
+        return Measure.initInch(this.original + measure2.original);
+    }
+
+    private boolean validateUnits(Measure measure2) throws Exception {
+        if (this.originalUnit != measure2.originalUnit)throw new Exception("hi");
+        return true;
     }
 
     @Override
